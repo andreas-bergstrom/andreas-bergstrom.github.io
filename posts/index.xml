@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 01 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python del vs assigning to None</title><link>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</link><pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate><guid>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</guid><description>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.
+Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
+
+<p>Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing. Most likely the latter as the Python runtime most often does not release unused memory back to the operating system.</p>
+
+<p>But when someone need to somehow mark a variable as ready to be freed by the garbage collector, there are usually two solutions they come across:</p>
+
+<p><div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">x</span> <span class="o">=</span> <span class="bp">None</span></code></pre></div>
+or
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">del</span> <span class="n">x</span></code></pre></div></p>
+
+<p>The difference is that <strong>x = None</strong> will free whatever it referenced but keep the name around even though it&rsquo;s just referencing None (which is a type, NoneType).</p>
+
+<p>On the other hand <strong>del x</strong> will completely remove both the name and what it referenced. If you thereafter try to use x an NameError will be thrown (or AttributeError in case of a object property).</p>
+
+<p>So in practice, by assigning None to a name you can still use it in expressions while using del the name is completely removed. In the first case a few bytes is needed to keep the name in memory, while the later completely clears all memory usage.</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Some text here to give the variable a decent size&#39;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x value before deletion: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x size before deletion: {} bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;y value before deletion: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">del</span> <span class="n">y</span>
+<span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span> <span class="c1"># Not really needed, just to show garbage collection has been done hereafter</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x value after deletion: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x size after deletion: {} bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="c1"># A few bytes needed to keep symbol name</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x type after deletion: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Can still use x!&#39;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;y value after deletion: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="c1"># Will throw NameError (AttributeError in case of class property)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">x value before deletion: Some text here to give the variable a decent size
+x size before deletion: <span class="m">98</span> bytes
+y value before deletion: <span class="m">2</span>
+x value after deletion: None
+x size after deletion: <span class="m">16</span> bytes
+x <span class="nb">type</span> after deletion: &lt;class <span class="s1">&#39;NoneType&#39;</span>&gt;
+Can still use x!
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&#34;Untitled.py&#34;</span>, line <span class="m">21</span>, in &lt;module&gt;
+    print<span class="o">(</span><span class="s1">&#39;y value after deletion: {}&#39;</span>.format<span class="o">(</span>y<span class="o">))</span> <span class="c1"># Will throw NameError (AttributeError in case of class property)</span>
+NameError: name <span class="s1">&#39;y&#39;</span> is not defined</code></pre></div>
+
+<p>As you can see in the error above, if you for whatever reason need to hook into the memory management, unless you know the difference between assigning to None and using <strong>del</strong> it could confuse you.</p>
+]]></content></item></channel></rss>
