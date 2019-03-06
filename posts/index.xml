@@ -1,4 +1,105 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 01 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python del vs assigning to None</title><link>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</link><pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate><guid>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</guid><description>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 05 Mar 2019 21:10:21 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>argparse - modern Python command line arguments</title><link>https://andreasbergstrom.com/posts/python-argparse/</link><pubDate>Tue, 05 Mar 2019 21:10:21 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-argparse/</guid><description>If you search for information on how to write Python modules that accepts command line arguments, you are very likely to stumble upon sys.argv and getopt() and go with it. But since Python 3.2 there is a better alternative that requires less boilerplate and less re-inventing the wheel: argparse.
+Just like getopt() argparse relies on sys.argv but it is more high-level and provides more functionality out of the box. At the core of argparse is the class ArgumentParser, which returns an object that you can use to create the argument interface.</description><content type="html"><![CDATA[<p>If you search for information on how to write Python modules that accepts command line arguments, you are very likely to stumble upon sys.argv and getopt() and go with it. But since Python 3.2 there is a better alternative that requires less boilerplate and less re-inventing the wheel: argparse.</p>
+
+<p>Just like getopt() argparse relies on sys.argv but it is more high-level and provides more functionality out of the box. At the core of argparse is the class ArgumentParser, which returns an object that you can use to create the argument interface. This interface will automatically provide argument parsing and generate the help text that users expect when using -h or &ndash;help.</p>
+
+<p>We will start with a simple program that accepts two positional arguments:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;positional_argument_1&#34;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;positional_argument_2&#34;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">positional_argument_1</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>So first a ArgumentParser-object is created, which we then add two (requied) positional arguments to and finally we dispatch the parser. This will then look into sys.argv and figure out how to parse its contents (which is all arguments provided by the user).</p>
+
+<p>That looks very neat and object-oriented. But we could instead access any positonal arguments directly through sys.argv with much less code:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># note: 0 = the name of the script, first positional argument at 1</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>So what is the point of using argparser? Let&rsquo;s look at a more functional example:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">argparse</span>
+ 
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-s&#34;</span><span class="p">,</span> <span class="s2">&#34;--string&#34;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+	<span class="n">help</span><span class="o">=</span><span class="s2">&#34;string to uppercase&#34;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+ 
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&#34;Uppercase of {args[&#39;string&#39;]} is {args[&#39;string&#39;].upper()}&#34;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Here we can see argparse starts to shine. This time we add an argument as a flag argument instead of positional. It is also set as required and a small help text is provided. This is what is returned if we run the script without any arguments:</p>
+
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">usage: main.py <span class="o">[</span>-h<span class="o">]</span> -s STRING
+main.py: error: the following arguments are required: -s/--string</code></pre></div>
+
+<p>So argparse will automatically make sure all required arguments are provided. And it also displays usage information on what arguments this program expects, something familiar to anyone who has used command line programs. If we provide only the -h flag futher information is shown:</p>
+
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">usage: main.py <span class="o">[</span>-h<span class="o">]</span> -s STRING
+
+optional arguments:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -s STRING, --string STRING
+                        string to uppercase</code></pre></div>
+
+<p>This format should be even more familiar if you have played around on the command line. And argparse will automatically provide this help interface from the arguments that is specified, we did not have to set anything up ourselves!</p>
+
+<p>So now we know how to use this program and if we provide -s andreas it will return:</p>
+
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Uppercase of andreas is ANDREAS</code></pre></div>
+
+<p>For this input sys.argv will contain either [&lsquo;main.py&rsquo;, &lsquo;-s&rsquo;, &lsquo;andreas&rsquo;], or [&lsquo;main.py&rsquo;, &lsquo;&ndash;string&rsquo;, &lsquo;andreas&rsquo;] if we had used the &ndash;string flag instead. But thanks to argparser we no longer have to parse this manually and can ignore all possible edge-cases and order.</p>
+
+<p>This is just the basics and I plan to cover more advanced usage sometime. The <a href="https://docs.python.org/3.3/library/argparse.html">docs</a> has a more complete reference.</p>
+
+<p>While argparser only handles arguments sent when starting the program, you can use <a href="https://github.com/prompt-toolkit/python-prompt-toolkit">python-prompt-toolkit</a> to create more interactive command prompts.</p>
+
+
+]]></content></item><item><title>Python del vs assigning to None</title><link>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</link><pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate><guid>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</guid><description>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.
 Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
 
 <p>Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing. Most likely the latter as the Python runtime most often does not release unused memory back to the operating system.</p>
