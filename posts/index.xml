@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 20 Mar 2019 15:20:53 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Various Python Utilities</title><link>https://andreasbergstrom.com/posts/various-python-utilities/</link><pubDate>Wed, 20 Mar 2019 15:20:53 +0100</pubDate><guid>https://andreasbergstrom.com/posts/various-python-utilities/</guid><description>This posts lists various small Python utilities, with link to gist on Github and embedded repl for running the code.
 Random names generator Generates a random name-like string, uses a generator function to yield each letter.
 Gist on Github
-import string import random vowels = &amp;#39;aeiou&amp;#39; consonants = &amp;#39;bcdfghijklmnpqrstvwxz&amp;#39; def get_letter(last_letter=None): if last_letter: last_letter_was_consonant = &amp;#39;&amp;#39;.join(last_letter) in consonants else: last_letter_was_consonant = False if not last_letter_was_consonant and bool(random.randint(0,1)): last_was_consonant = True yield random.</description><content type="html"><![CDATA[
+import string import random vowels = &amp;#39;aeiou&amp;#39; consonants = &amp;#39;bcdfghijklmnpqrstvwxz&amp;#39; def get_letter(last_letter=None): # Check if last letter generated was a consonant if last_letter: last_letter = &amp;#39;&amp;#39;.join(last_letter) last_letter_was_consonant = last_letter in consonants else: last_letter_was_consonant = False # If last letter was a vowel, make it 50% chance to generate a consonant if not last_letter_was_consonant and bool(random.</description><content type="html"><![CDATA[
 
 <p>This posts lists various small Python utilities, with link to gist on Github and embedded repl for running the code.</p>
 
@@ -18,11 +18,14 @@ import string import random vowels = &amp;#39;aeiou&amp;#39; consonants = &amp;#
 <span class="n">consonants</span> <span class="o">=</span> <span class="s1">&#39;bcdfghijklmnpqrstvwxz&#39;</span>
 
 <span class="k">def</span> <span class="nf">get_letter</span><span class="p">(</span><span class="n">last_letter</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+	<span class="c1"># Check if last letter generated was a consonant</span>
 	<span class="k">if</span> <span class="n">last_letter</span><span class="p">:</span>
-		<span class="n">last_letter_was_consonant</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">last_letter</span><span class="p">)</span> <span class="ow">in</span> <span class="n">consonants</span>
+		<span class="n">last_letter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">last_letter</span><span class="p">)</span>
+		<span class="n">last_letter_was_consonant</span> <span class="o">=</span> <span class="n">last_letter</span> <span class="ow">in</span> <span class="n">consonants</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">last_letter_was_consonant</span> <span class="o">=</span> <span class="bp">False</span>
 	
+	<span class="c1"># If last letter was a vowel, make it 50% chance to generate a consonant</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">last_letter_was_consonant</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)):</span>
 		<span class="n">last_was_consonant</span> <span class="o">=</span> <span class="bp">True</span>
 		<span class="k">yield</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">consonants</span><span class="p">)</span>
@@ -32,8 +35,10 @@ import string import random vowels = &amp;#39;aeiou&amp;#39; consonants = &amp;#
 
 <span class="k">def</span> <span class="nf">generate_word</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 	<span class="n">word</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+	
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">spread</span><span class="p">)):</span>
 		<span class="n">word</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">get_letter</span><span class="p">(</span><span class="n">last_letter</span><span class="o">=</span><span class="n">word</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:])))</span>
+	
 	<span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
