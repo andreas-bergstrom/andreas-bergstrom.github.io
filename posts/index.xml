@@ -277,12 +277,8 @@ Replace literals with constants in if-expressions Whenever you need to check the
 <span class="mi">10</span></code></pre></div>
 
 
-]]></content></item><item><title>Master Python Dates</title><link>https://andreasbergstrom.com/posts/master-python-dates/</link><pubDate>Thu, 28 Mar 2019 08:38:33 +0100</pubDate><guid>https://andreasbergstrom.com/posts/master-python-dates/</guid><description>Master date and time handling in Python It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!
-When dealing with dates you will want to use the datetime packages, which comes with both date and datetime.</description><content type="html"><![CDATA[
-
-<h1 id="master-date-and-time-handling-in-python">Master date and time handling in Python</h1>
-
-<p>It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!</p>
+]]></content></item><item><title>Master date and time handling in Python</title><link>https://andreasbergstrom.com/posts/master-python-dates/</link><pubDate>Thu, 28 Mar 2019 08:38:33 +0100</pubDate><guid>https://andreasbergstrom.com/posts/master-python-dates/</guid><description>It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!
+When dealing with dates you will want to use the datetime packages, which comes with both date and datetime.</description><content type="html"><![CDATA[<p>It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!</p>
 
 <p>When dealing with dates you will want to use the datetime packages, which comes with both date and datetime. The former is for working with dates and the latter for dates and time. There is also the less used time module. We will use datetime for the upcoming examples:</p>
 
