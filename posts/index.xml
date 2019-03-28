@@ -1,199 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 24 Mar 2019 17:24:57 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Sun, 24 Mar 2019 17:24:57 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
-Replace literals with constants in if-expressions Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:
-1 2 3 4 if direction == &amp;#39;up&amp;#39;: # ... elif direction == &amp;#39;down&amp;#39;: # ... This might seem like pythonic code, but its simplicity could bite you.</description><content type="html"><![CDATA[
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 28 Mar 2019 08:38:33 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Master Python Dates</title><link>https://andreasbergstrom.com/posts/master-python-dates/</link><pubDate>Thu, 28 Mar 2019 08:38:33 +0100</pubDate><guid>https://andreasbergstrom.com/posts/master-python-dates/</guid><description>Master date and time handling in Python It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!
+When dealing with dates you will want to use the datetime packages, which comes with both date and datetime.</description><content type="html"><![CDATA[
 
-<hr>
-
-<p><div style="text-align: center">
-<strong>This post is a work in progress and will expand over time.</strong>
-</div>
-<hr></p>
-
-<h2 id="replace-literals-with-constants-in-if-expressions">Replace literals with constants in if-expressions</h2>
-
-<p>Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span>
-  <span class="c1"># ...</span>
-<span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span>
-  <span class="c1"># ...</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>This might seem like pythonic code, but its simplicity could bite you. If you have a lot of conditions and perhaps in multiple locations in your code, what happens if you mistype any of those string literals? Python will not complain, and there will not be any runtime errors. But you will end up with logical errors that could be insanely hard to track down.</p>
-
-<p>Numeric literals are double trouble as the also comes with the issue of <a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">magic numbers</a>. In the following example we not only have to guess what the number 545 really means, but it is almost easier to mistype than a string since we can not use common sense to detect a spelling error:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="mi">545</span><span class="p">:</span>
-  <span class="c1"># ...</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>In order to make your code more readable and to make it crash on any typos, using constants is often recommended. Simply extract the raw values into appropriately located constants (in Python just uppercased variables) and use the constants in the all if-expressions:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">UP</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span>
-<span class="n">DOWN</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span>
-
-<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">UP</span><span class="p">:</span>
-  <span class="c1"># ...</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>And with numeric literals:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
-
-<span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="n">SERVER_DOWN</span><span class="p">:</span>
-  <span class="c1"># ...</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>In the first example Python will throw a NameError if you by mistake type &ldquo;UPP&rdquo;, &ldquo;uP&rdquo; or &ldquo;OP&rdquo;. Had we used string literals, Python would have had no way to recognize your typing error.</p>
-
-<p>In larger projects you could group all constants in one or more modules. Since Python 3.4 there is also a new tool to help organize this: enums.</p>
-
-<p>Enums are declared as classes but inherit from enum.Enum. This allows us to group related constants under a canonical name:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">enum</span>
-
-<span class="k">class</span> <span class="nc">ErrorCode</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-  <span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
-  <span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
-
-<span class="n">error</span> <span class="o">=</span> <span class="mi">100</span>
-
-<span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">SERVER_DOWN</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Server is down&#39;</span><span class="p">)</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>Enums can be compared with the <strong><em>is</em></strong> keyword. If you are in control of how each operand in a comparison is created, you could therefor use enums throughout your code to increase the readability even futher:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">enum</span>
-
-<span class="k">class</span> <span class="nc">ErrorCode</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-  <span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
-  <span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
-
-<span class="n">error</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">CONNECTION_ERROR</span>
-
-<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">CONNECTION_ERROR</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;There is a connetion error&#39;</span><span class="p">)</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>Do however keep in mind that <a href="https://stackoverflow.com/questions/30812793/how-to-use-python-3-4s-enums-without-significant-slowdown">enum attribute lookups are slower than regular attributes lookups</a>.</p>
-
-<h2 id="microseconds-and-accuracy-in-time-sleep">Microseconds and accuracy in time.sleep()</h2>
-
-<p>The sleep function in the time module can be used to halt execution for a given number of seconds. But it is easy to miss that the argument can be a float as well. In other words, you can use microseconds and not just whole seconds:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<p>This can be useful when you need to make a short pause but not necesseraly in seconds. For example if you are hammering an internal or external API in some batch job it could be useful to let the other end catch its breath for a while by pausing for a few hundred microseconds.</p>
-
-<p>Though you should not trust the accuracy of this function down to the microseconds, wether you are using seconds or microseconds. Since Python&rsquo;s sleep() uses the current operating system&rsquo;s underlying sleep-functionality, unless you are using a real-time system this function will not be 100% accurate:</p>
-
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">timeit</span>
-
-<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></code></pre></td></tr></table>
-</div>
-</div>
-
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="mf">5.273200581</span>
-<span class="mf">5.261563578</span>
-<span class="mf">5.282216143000001</span></code></pre></div>
-
-<h2 id="master-date-and-time-handling-in-python">Master date and time handling in Python</h2>
+<h1 id="master-date-and-time-handling-in-python">Master date and time handling in Python</h1>
 
 <p>It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!</p>
 
@@ -487,6 +295,200 @@ Replace literals with constants in if-expressions Whenever you need to check the
 <span class="p">[</span><span class="s1">&#39;Africa/Abidjan&#39;</span><span class="p">,</span> <span class="s1">&#39;Africa/Accra&#39;</span><span class="p">,</span> <span class="s1">&#39;Africa/Addis_Ababa&#39;</span><span class="o">...</span></code></pre></td></tr></table>
 </div>
 </div>
+]]></content></item><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Wed, 27 Mar 2019 17:24:57 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
+Replace literals with constants in if-expressions Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:
+1 2 3 4 if direction == &amp;#39;up&amp;#39;: # ... elif direction == &amp;#39;down&amp;#39;: # ... This might seem like pythonic code, but its simplicity could bite you.</description><content type="html"><![CDATA[
+
+<hr>
+
+<p><div style="text-align: center">
+<strong>This post is a work in progress and will expand over time.</strong>
+</div>
+<hr></p>
+
+<h2 id="replace-literals-with-constants-in-if-expressions">Replace literals with constants in if-expressions</h2>
+
+<p>Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span>
+  <span class="c1"># ...</span>
+<span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span>
+  <span class="c1"># ...</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>This might seem like pythonic code, but its simplicity could bite you. If you have a lot of conditions and perhaps in multiple locations in your code, what happens if you mistype any of those string literals? Python will not complain, and there will not be any runtime errors. But you will end up with logical errors that could be insanely hard to track down.</p>
+
+<p>Numeric literals are double trouble as the also comes with the issue of <a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">magic numbers</a>. In the following example we not only have to guess what the number 545 really means, but it is almost easier to mistype than a string since we can not use common sense to detect a spelling error:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="mi">545</span><span class="p">:</span>
+  <span class="c1"># ...</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>In order to make your code more readable and to make it crash on any typos, using constants is often recommended. Simply extract the raw values into appropriately located constants (in Python just uppercased variables) and use the constants in the all if-expressions:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">UP</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span>
+<span class="n">DOWN</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span>
+
+<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">UP</span><span class="p">:</span>
+  <span class="c1"># ...</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>And with numeric literals:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="k">if</span> <span class="n">error_code</span> <span class="o">==</span> <span class="n">SERVER_DOWN</span><span class="p">:</span>
+  <span class="c1"># ...</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>In the first example Python will throw a NameError if you by mistake type &ldquo;UPP&rdquo;, &ldquo;uP&rdquo; or &ldquo;OP&rdquo;. Had we used string literals, Python would have had no way to recognize your typing error.</p>
+
+<p>In larger projects you could group all constants in one or more modules. Since Python 3.4 there is also a new tool to help organize this: enums.</p>
+
+<p>Enums are declared as classes but inherit from enum.Enum. This allows us to group related constants under a canonical name:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">enum</span>
+
+<span class="k">class</span> <span class="nc">ErrorCode</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
+  <span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">error</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">SERVER_DOWN</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Server is down&#39;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Enums can be compared with the <strong><em>is</em></strong> keyword. If you are in control of how each operand in a comparison is created, you could therefor use enums throughout your code to increase the readability even futher:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">enum</span>
+
+<span class="k">class</span> <span class="nc">ErrorCode</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">SERVER_DOWN</span> <span class="o">=</span> <span class="mi">100</span>
+  <span class="n">CONNECTION_ERROR</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">error</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">CONNECTION_ERROR</span>
+
+<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">CONNECTION_ERROR</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;There is a connetion error&#39;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Do however keep in mind that <a href="https://stackoverflow.com/questions/30812793/how-to-use-python-3-4s-enums-without-significant-slowdown">enum attribute lookups are slower than regular attributes lookups</a>.</p>
+
+<h2 id="microseconds-and-accuracy-in-time-sleep">Microseconds and accuracy in time.sleep()</h2>
+
+<p>The sleep function in the time module can be used to halt execution for a given number of seconds. But it is easy to miss that the argument can be a float as well. In other words, you can use microseconds and not just whole seconds:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>This can be useful when you need to make a short pause but not necesseraly in seconds. For example if you are hammering an internal or external API in some batch job it could be useful to let the other end catch its breath for a while by pausing for a few hundred microseconds.</p>
+
+<p>Though you should not trust the accuracy of this function down to the microseconds, wether you are using seconds or microseconds. Since Python&rsquo;s sleep() uses the current operating system&rsquo;s underlying sleep-functionality, unless you are using a real-time system this function will not be 100% accurate:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;time.sleep(0.05)&#39;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="mf">5.273200581</span>
+<span class="mf">5.261563578</span>
+<span class="mf">5.282216143000001</span></code></pre></div>
 
 
 ]]></content></item><item><title>Python random name generator</title><link>https://andreasbergstrom.com/posts/python-random-name-generator/</link><pubDate>Wed, 20 Mar 2019 15:20:53 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-random-name-generator/</guid><description>Generates a random name-like string, uses a generator function to yield each letter.
