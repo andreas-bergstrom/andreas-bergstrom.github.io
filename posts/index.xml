@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 28 Mar 2019 12:24:57 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Thu, 28 Mar 2019 12:24:57 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 31 Mar 2019 15:21:37 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Sun, 31 Mar 2019 15:21:37 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
 Replace literals with constants in if-expressions Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:
 1 2 3 4 if direction == &amp;#39;up&amp;#39;: # ... elif direction == &amp;#39;down&amp;#39;: # ... This might seem like pythonic code, but its simplicity could bite you.</description><content type="html"><![CDATA[
 
@@ -243,7 +243,7 @@ Replace literals with constants in if-expressions Whenever you need to check the
 
 <p>Often when the REPL is used to experiment you will need to juggle values back and forth. In those scenarios it is common to create a lot of temporary variables just to keep the result of the last command around. But there is actually an easy way to do that without creating variables left and right.</p>
 
-<p>All expressions evaluated in the REPL return a value, and if that value is <strong>not</strong> None it will actually automatically be stored in a built-in variable: _ (underscore):</p>
+<p>All expressions evaluated in the REPL return a value, and if that value is <strong>not</strong> None it will actually automatically be stored in a built-in variable. If you have done Python programming for some time you might have come across the best-practice of using _ for throw-away variables, most commonly in for-loops with ranges. In the REPL _ serves a different purpose:</p>
 
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span>
 <span class="mi">3</span>
@@ -275,6 +275,84 @@ Replace literals with constants in if-expressions Whenever you need to check the
 <span class="mi">10</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">_</span>
 <span class="mi">10</span></code></pre></div>
+
+<h2 id="understand-truthy-and-falsy">Understand truthy and falsy</h2>
+
+<p>Truthy and falsy are the ways values implicitly converts to booleans when used in if-expressions, and are different to the booleans True and False. Booleans work pretty much identical in every major programming language. But the workings of truthy and falsy are not. Javascript are infamous for being really messy and inconsistent with its truthy and falsy values, while Swift and C# simply does not allow any implicit conversion to booleans. Python sits somewhere in between with a very rational and sensible arrangement.</p>
+
+<p>When evaluated in if-expressions, the following values will evaluate to False:</p>
+
+<ul>
+<li>False</li>
+<li>None</li>
+<li>0 (integer)</li>
+<li>0.0 (float)</li>
+<li>0j (complex)</li>
+<li>Decimal(0)</li>
+<li>Fraction(0, 1)</li>
+<li>[] (empty list)</li>
+<li>{} (empty dict)</li>
+<li>() (empty tuple)</li>
+<li>set() (empty set)</li>
+<li>&rdquo; (empty string)</li>
+<li>b&rdquo; (empty bytestring)</li>
+<li>any empty range, like range(0) or range(0, 0)</li>
+<li>objects with an implementation of <strong>bool</strong>() that returns False</li>
+<li>objects with an implementatino of <strong>len</strong>() that returns 0</li>
+</ul>
+
+<p>New Python developers with a background in Javascript or PHP should note that there is no such thing as loosely comparissons in Python. So while you in Javascript can do this:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="o">&gt;</span> <span class="s1">&#39;&#39;</span> <span class="o">==</span> <span class="kc">false</span>
+<span class="kc">true</span>
+<span class="o">&gt;</span> <span class="s1">&#39;&#39;</span> <span class="o">===</span> <span class="kc">false</span>
+<span class="kc">false</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>And in PHP:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">php &gt; if(&#39;&#39; == false) { echo &#39;false&#39;;  }
+false
+php &gt; if(&#39;&#39; === false) { echo &#39;false&#39;;  }
+php &gt; </code></pre></td></tr></table>
+</div>
+</div>
+
+<p>But Python does not work the same way, there is only strict comparisson that compares both value and type:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;&#39;</span> <span class="o">==</span> <span class="nx">False</span>
+<span class="nx">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;&#39;</span> <span class="o">==</span> <span class="nx">True</span>
+<span class="nx">False</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 
 
 ]]></content></item><item><title>Master date and time handling in Python</title><link>https://andreasbergstrom.com/posts/master-python-dates/</link><pubDate>Thu, 28 Mar 2019 08:38:33 +0100</pubDate><guid>https://andreasbergstrom.com/posts/master-python-dates/</guid><description>It might seem like a basic advice, but you will be suprised how much time you can save by simply learning how to properly work with dates. While this is a common task it is often not practiced enough that you really remember all the ins and outs of it. But it is really simple!
@@ -647,7 +725,7 @@ Any text added here will not be rendered
 <span class="p">{{&lt;</span><span class="cm">/* / todo */</span><span class="p">&gt;}}</span></code></pre></div>
 
 <p>This way the text will be rendered raw instead of processed.</p>
-]]></content></item><item><title>argparse - modern Python command line arguments</title><link>https://andreasbergstrom.com/posts/python-argparse/</link><pubDate>Tue, 05 Mar 2019 21:10:21 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-argparse/</guid><description>If you search for information on how to write Python modules that accepts command line arguments, you are very likely to stumble upon sys.argv and getopt() and go with it. But since Python 3.2 there is a better alternative that requires less boilerplate and less re-inventing the wheel: argparse.
+]]></content></item><item><title>Better Python Command Line Arguments with argparse</title><link>https://andreasbergstrom.com/posts/python-argparse/</link><pubDate>Tue, 05 Mar 2019 21:10:21 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-argparse/</guid><description>If you search for information on how to write Python modules that accepts command line arguments, you are very likely to stumble upon sys.argv and getopt() and go with it. But since Python 3.2 there is a better alternative that requires less boilerplate and less re-inventing the wheel: argparse.
 Just like getopt() argparse relies on sys.argv but it is more high-level and provides more functionality out of the box. At the core of argparse is the class ArgumentParser, which returns an object that you can use to create the argument interface.</description><content type="html"><![CDATA[<p>If you search for information on how to write Python modules that accepts command line arguments, you are very likely to stumble upon sys.argv and getopt() and go with it. But since Python 3.2 there is a better alternative that requires less boilerplate and less re-inventing the wheel: argparse.</p>
 
 <p>Just like getopt() argparse relies on sys.argv but it is more high-level and provides more functionality out of the box. At the core of argparse is the class ArgumentParser, which returns an object that you can use to create the argument interface. This interface will automatically provide argument parsing and generate the help text that users expect when using -h or &ndash;help.</p>
@@ -749,7 +827,9 @@ optional arguments:
 
 
 ]]></content></item><item><title>Python del vs assigning to None</title><link>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</link><pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate><guid>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</guid><description>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.
-Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
+Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[
+
+<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
 
 <p>Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing. Most likely the latter as the Python runtime most often does not release unused memory back to the operating system.</p>
 
@@ -895,4 +975,6 @@ Bytecode when using del:
               <span class="m">8</span> RETURN_VALUE</code></pre></div>
 
 <p>So using <strong>del</strong> results in only one bytecode, DELETE_FAST, while assigning to None actually runs a full assignment using LOAD_CONST and STORE_FAST. The last LOAD_CONST before RETURN_VALUE in both functions is simply the return value None that every Python function implicitly returns.</p>
+
+<h2 id="know-what-is-considered-true-and-false">Know what is considered True and False</h2>
 ]]></content></item></channel></rss>
