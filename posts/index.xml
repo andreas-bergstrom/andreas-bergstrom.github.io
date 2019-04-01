@@ -827,9 +827,7 @@ optional arguments:
 
 
 ]]></content></item><item><title>Python del vs assigning to None</title><link>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</link><pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate><guid>https://andreasbergstrom.com/posts/python-del-vs-assign-none/</guid><description>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.
-Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[
-
-<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
+Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing.</description><content type="html"><![CDATA[<p>Python utilizes garbage collection to free the developer from the hassle of manually handling allocating and de-allocating memory. But there are still some details that could suprise you unless you are aware of them.</p>
 
 <p>Because even though the Python runtime will take care of memory management, sometimes developers will want to manually tell the garbage colletor that a variable is no longer needed. Either because they are doing some edge-case optimization and really know what they are doing or they think they are smart but have no idea what they are doing. Most likely the latter as the Python runtime most often does not release unused memory back to the operating system.</p>
 
@@ -975,6 +973,4 @@ Bytecode when using del:
               <span class="m">8</span> RETURN_VALUE</code></pre></div>
 
 <p>So using <strong>del</strong> results in only one bytecode, DELETE_FAST, while assigning to None actually runs a full assignment using LOAD_CONST and STORE_FAST. The last LOAD_CONST before RETURN_VALUE in both functions is simply the return value None that every Python function implicitly returns.</p>
-
-<h2 id="know-what-is-considered-true-and-false">Know what is considered True and False</h2>
 ]]></content></item></channel></rss>
