@@ -1,4 +1,74 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 31 Mar 2019 15:21:37 +0100</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Sun, 31 Mar 2019 15:21:37 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Andreas Bergström</title><link>https://andreasbergstrom.com/posts/</link><description>Recent content in Posts on Andreas Bergström</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 02 Apr 2019 14:56:41 +0200</lastBuildDate><atom:link href="https://andreasbergstrom.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Using PyCharm scratch files with Django</title><link>https://andreasbergstrom.com/posts/pycharm-scratch-files-django/</link><pubDate>Tue, 02 Apr 2019 14:56:41 +0200</pubDate><guid>https://andreasbergstrom.com/posts/pycharm-scratch-files-django/</guid><description>Scratches are a great feature in PyCharm that are going to speed up your development and prototyping once you start using them. A scratch file is nothing more than a temporary file that lives outside of your regular project structure:
+While the Django shell is great for trying out your code, it is not that comfortable to work with when you are writing large amounts of code. This is where scratch files comes handy, allowing you to use a regular file but without cluttering up your real codebase.</description><content type="html"><![CDATA[<p><a href="https://www.jetbrains.com/help/pycharm/scratches.html">Scratches</a> are a great feature in PyCharm that are going to speed up your development and prototyping once you start using them. A scratch file is nothing more than a temporary file that lives outside of your regular project structure:</p>
+
+<p><img src="/images/pycharm_scratches.png" alt="PyCharm scratch files in Project view" /></p>
+
+<p>While the Django shell is great for trying out your code, it is not that comfortable to work with when you are writing large amounts of code. This is where scratch files comes handy, allowing you to use a regular file but without cluttering up your real codebase.</p>
+
+<p>Though if you fire up a new scratch file and try to access any part of a Django app, for example a model, you are going to get an ImproperlyConfigured-error similar to this:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Library/Preferences/PyCharm2019.1/scratches/scratch_1.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="kn">from</span> <span class="nn">app.models</span> <span class="kn">import</span> <span class="n">Job</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/app/models.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">5</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/venv/lib/python3.7/site-packages/django/db/models/base.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">87</span><span class="p">,</span> <span class="ow">in</span> <span class="fm">__new__</span>
+    <span class="n">app_config</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">get_containing_app_config</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/venv/lib/python3.7/site-packages/django/apps/registry.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">249</span><span class="p">,</span> <span class="ow">in</span> <span class="n">get_containing_app_config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">check_apps_ready</span><span class="p">()</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/venv/lib/python3.7/site-packages/django/apps/registry.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">131</span><span class="p">,</span> <span class="ow">in</span> <span class="n">check_apps_ready</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">INSTALLED_APPS</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/venv/lib/python3.7/site-packages/django/conf/__init__.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">57</span><span class="p">,</span> <span class="ow">in</span> <span class="fm">__getattr__</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&#34;/Users/andreasbergstrom/Projects/kodare_se/venv/lib/python3.7/site-packages/django/conf/__init__.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">42</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_setup</span>
+    <span class="o">%</span> <span class="p">(</span><span class="n">desc</span><span class="p">,</span> <span class="n">ENVIRONMENT_VARIABLE</span><span class="p">))</span>
+<span class="n">django</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ImproperlyConfigured</span><span class="p">:</span> <span class="n">Requested</span> <span class="n">setting</span> <span class="n">INSTALLED_APPS</span><span class="p">,</span> <span class="n">but</span> <span class="n">settings</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">configured</span><span class="o">.</span> <span class="n">You</span> <span class="n">must</span> <span class="n">either</span> <span class="n">define</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">variable</span> <span class="n">DJANGO_SETTINGS_MODULE</span> <span class="ow">or</span> <span class="n">call</span> <span class="n">settings</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span> <span class="n">before</span> <span class="n">accessing</span> <span class="n">settings</span><span class="o">.</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>The reason is that you are trying to use a Django app that has not been initialized yet. Even if you are just trying to use some model the framework still need to initialize and configure itself. To do this, just drop these lines of code at the top of your scratch file (before any other imports) and replace &ldquo;YOUAPPNAME&rdquo; with your app name:</p>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&#34;DJANGO_SETTINGS_MODULE&#34;</span><span class="p">,</span> <span class="s2">&#34;YOUAPPNAME.settings&#34;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">django</span>
+<span class="n">django</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Now Django is configured and you can use it just like you can at the management shell.</p>
+]]></content></item><item><title>Python Tips and Gotchas</title><link>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</link><pubDate>Sun, 31 Mar 2019 15:21:37 +0100</pubDate><guid>https://andreasbergstrom.com/posts/python-gotchas-and-tips/</guid><description>This post is a work in progress and will expand over time.
 Replace literals with constants in if-expressions Whenever you need to check the value of a basic data type, the most straight-forward solution is to use literals:
 1 2 3 4 if direction == &amp;#39;up&amp;#39;: # ... elif direction == &amp;#39;down&amp;#39;: # ... This might seem like pythonic code, but its simplicity could bite you.</description><content type="html"><![CDATA[
 
