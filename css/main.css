@@ -276,6 +276,10 @@ ul {
     margin-bottom: 0;
 }
 
+.tag {
+    margin-left: 0.3rem;
+}
+
 .tag-cloud {
     margin-top: 20px;
 }
