@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>Running tests in parallel with Django and PyCharm - Andreas Bergström</title><meta name=viewport content="width=device-width,initial-scale=1"><meta property=og:title content="Running tests in parallel with Django and PyCharm"><meta property=og:description content="These days it is hard to come across any consumer device that only has one CPU-core. And even though most computers released during the last decade comes with multiple cores, there are plenty of software that defaults to non-parallel execution. The unittest package in Python&rsquo;s standard library is sadly one of those.
+But there is still hope. The powerful pytest framework and Django&rsquo;s own testing framework does support running test in parallel, which can vastly decrease the time required to run through a suite of tests."><meta property=og:type content=article><meta property=og:url content=https://andreasbergstrom.com/posts/python-django-pycharm-parallel-tests/><meta property=article:published_time content=2019-08-01T06:31:39&#43;01:00><meta property=article:modified_time content=2019-08-01T06:31:39&#43;01:00><meta name=twitter:card content=summary><meta name=twitter:title content="Running tests in parallel with Django and PyCharm"><meta name=twitter:description content="These days it is hard to come across any consumer device that only has one CPU-core. And even though most computers released during the last decade comes with multiple cores, there are plenty of software that defaults to non-parallel execution. The unittest package in Python&rsquo;s standard library is sadly one of those.
+But there is still hope. The powerful pytest framework and Django&rsquo;s own testing framework does support running test in parallel, which can vastly decrease the time required to run through a suite of tests."><link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/normalize.css><link rel=stylesheet type=text/css media=screen href=/css/main.css><script src=https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js></script><script src=/js/main.js></script></head><body><div class="container wrapper post"><div class=header><h1 class=site-title>Andreas Bergström</h1><div class=site-description><h2>Full Stack Web Developer</h2><nav class="nav social"><ul class=flat><a href=https://github.com/andreas-bergstrom title=Github><i data-feather=github></i></a><a href=https://www.linkedin.com/in/andreaserikbergstrom/ title=LinkedIn><i data-feather=linkedin></i></a><a href=https://stackoverflow.com/users/1202214/andreas-bergstr%c3%b6m title="Stack Overflow"><i data-feather=paperclip></i></a><a href=https://twitter.com/echoandreas title=Twitter><i data-feather=twitter></i></a><a href=mailto:hi@andreasbergstrom.com title="Send email"><i data-feather=mail></i></a></ul></nav></div><nav class=nav><ul class=flat><li><a href=/>Home</a></li><li><a href=/posts>All posts</a></li><li><a href=/about-me>About</a></li><li><a href=/tags>Tags</a></li></ul></nav></div><div class=post-header><h1 class=title>Running tests in parallel with Django and PyCharm</h1><div class=meta>2019-08-08 - 880 words - 5 minutes to read</div><div class=meta>Tagged with<span class=tag><a href=https://andreasbergstrom.com/tags/python>python</a></span><span class=tag><a href=https://andreasbergstrom.com/tags/django>django</a></span><span class=tag><a href=https://andreasbergstrom.com/tags/testing>testing</a></span><span class=tag><a href=https://andreasbergstrom.com/tags/unittest>unittest</a></span><span class=tag><a href=https://andreasbergstrom.com/tags/pycharm>pycharm</a></span></div></div><div class=markdown><p>These days it is hard to come across any consumer device that only has one CPU-core. And even though most computers released during the last decade comes with multiple cores, there are plenty of software that defaults to non-parallel execution. The unittest package in Python&rsquo;s standard library is sadly one of those.</p><p>But there is still hope. The powerful pytest framework and Django&rsquo;s own testing framework does support running test in parallel, which can vastly decrease the time required to run through a suite of tests. Let us take a look at the latter and see how we can integrate it into PyCharm&rsquo;s interface.</p><p>The testing framework in Django is based on unittest, but comes with its own testrunner which handles parallel test execution. It is not the default configuration so you have to provide the <em>&ndash;parallel</em> flag, <a href=https://docs.djangoproject.com/en/dev/ref/django-admin/#cmdoption-test-parallel>this is what the documentation says</a>:</p><blockquote><p>&ndash;parallel [N]</p><p>Runs tests in separate parallel processes. Since modern processors have multiple cores, this allows running tests significantly faster.</p><p>By default &ndash;parallel runs one process per core according to multiprocessing.cpu_count(). You can adjust the number of processes either by providing it as the option’s value, e.g. &ndash;parallel=4, or by setting the DJANGO_TEST_PROCESSES environment variable.</p></blockquote><p>So by just doing manage.py test <em>&ndash;parallel</em> the tests should run in parallel optimized according to the amount of available cores. By using multiprocessing.cpu_count() in a REPL prompt I can determine that Python sees 4 cores on my system:</p><div class=highlight><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Terminfo data-lang=Terminfo>&gt;&gt; import multiprocessing
+&gt;&gt; multiprocessing.cpu_count()
+4</code></pre></div><p>This means that if I have 4 test cases which each take around 1 second to finish, they should be able run in parallel and finish in about 1 second instead of 4 seconds. Here are the simple dummy tests:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#00f>import</span> time
+
+<span style=color:#00f>from</span> django.test <span style=color:#00f>import</span> TestCase
+
+
+<span style=color:#00f>class</span> <span style=color:#2b91af>TestDummy</span>(TestCase):
+    <span style=color:#00f>def</span> test_dummy(self):
+        time.sleep(1)
+        self.assertEqual(1, 1)
+
+
+<span style=color:#00f>class</span> <span style=color:#2b91af>TestDummy2</span>(TestCase):
+    <span style=color:#00f>def</span> test_dummy(self):
+        time.sleep(1)
+        self.assertEqual(1, 1)
+
+
+<span style=color:#00f>class</span> <span style=color:#2b91af>TestDummy3</span>(TestCase):
+    <span style=color:#00f>def</span> test_dummy(self):
+        time.sleep(1)
+        self.assertEqual(1, 1)
+
+
+<span style=color:#00f>class</span> <span style=color:#2b91af>TestDummy4</span>(TestCase):
+    <span style=color:#00f>def</span> test_dummy(self):
+        time.sleep(1)
+        self.assertEqual(1, 1)</code></pre></td></tr></table></div></div><p>Save it in a app where Django can locate it and run them by:</p><div class=highlight><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Terminfo data-lang=Terminfo>(venv) ➜  paralleltests git:(master) ✗ python manage.py test
+Creating test database for alias &#39;default&#39;...
+System check identified no issues (0 silenced).
+....
+----------------------------------------------------------------------
+<span style=display:block;width:100%;background-color:#e5e5e5>Ran 4 tests in 4.014s
+</span>
+OK
+Destroying test database for alias &#39;default&#39;...</code></pre></div><p>We can see that the 4 tests executed one by one taking 4 seconds. Let us now add the <em>&ndash;parallel</em> flag:</p><div class=highlight><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Terminfo data-lang=Terminfo>(venv) ➜  paralleltests git:(master) ✗ python manage.py test --parallel
+Creating test database for alias &#39;default&#39;...
+Cloning test database for alias &#39;default&#39;...
+Cloning test database for alias &#39;default&#39;...
+Cloning test database for alias &#39;default&#39;...
+Cloning test database for alias &#39;default&#39;...
+System check identified no issues (0 silenced).
+....
+----------------------------------------------------------------------
+<span style=display:block;width:100%;background-color:#e5e5e5>Ran 4 tests in 1.071s
+</span>
+OK
+Destroying test database for alias &#39;default&#39;...
+Destroying test database for alias &#39;default&#39;...
+Destroying test database for alias &#39;default&#39;...
+Destroying test database for alias &#39;default&#39;...
+Destroying test database for alias &#39;default&#39;...</code></pre></div><p>This time the 4 tests only took around 1 second to execute, that&rsquo;s a pretty significant performance improvement! For larger projects and 6 or 8-core CPUs (with 12 or 16 cores visible to the OS), this simple flag can save huge amounts of time on larger tests suites.</p><h2 id=configuring-pycharm>Configuring PyCharm</h2><p>If you are using PyCharm you might wish to integrate the <em>&ndash;parallel</em> flag into its run configuration interface, so you can run parallel tests straight from the IDE.</p><p>There seems to be some gotchas to this however. If you open up a default run configuration it should look something similar to this:</p><p><img src=/images/pycharm_run_configuration1.png alt="PyCharm scratch files in Project view"></p><p>Enable the options field and enter &ldquo;&ndash;parallel&rdquo; into it:</p><p><img src=/images/pycharm_run_configuration2.png alt="PyCharm scratch files in Project view"></p><p>That should do it but if you save it and run your tests, you will likely get this error:</p><div class=highlight><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Terminfo data-lang=Terminfo>django_test_manage.py test: error: argument --parallel: invalid int value: &#39;core.tests&#39;</code></pre></div><p>Huh, why does it seem like the argument is no longer optional? If you look at the top of the current run session, you will see the command PyCharm used to initiate manage.py test:</p><div class=highlight><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Terminfo data-lang=Terminfo>... /pycharm/django_test_manage.py&#34; test --parallel core.tests ...</code></pre></div><p>PyCharm injects the option flags before the target which will by accident supply the target as a argument to <strong>&ndash;parallel</strong>. The proper order should be <em>test core.tests <strong>&ndash;parallel</strong></em>.</p><p>There are 2 solutions to this. Either simply remove the target field in the run configuration:</p><p><img src=/images/pycharm_run_configuration4.png alt="PyCharm scratch files in Project view"></p><p>Or just supply the argument to &ndash;parallel (the amount of parallel processes that should be launched):</p><p><img src=/images/pycharm_run_configuration3.png alt="PyCharm scratch files in Project view"></p><p>There is no potential performance overhead to this, as the documentation states the amount of actual launched processed will never be more than the amount of test cases:</p><blockquote><p>Django distributes test cases — unittest.TestCase subclasses — to subprocesses. If there are fewer test cases than configured processes, Django will reduce the number of processes accordingly.</p></blockquote><p>Finally, test cases that are executed parallel should not be independent on each other in any way. As the order which they are launched can be completely random no test case should expect another test case to have finished or even started. Neither should they depend on the same resources such as files. Also note that each test case will have its own database, as opposed to non-parallel execution.</p><p>If you are using pytest and want to run the tests in parallel from PyCharm, see <a href=https://www.jetbrains.com/help/pycharm/.performing-tests.html#test-mutliprocessing>the documentation</a></p></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname=="localhost")
+return;var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;var disqus_shortname='andreasbergstromcom';dsq.src='//'+disqus_shortname+'.disqus.com/embed.js';(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by
+Disqus.</a></noscript><a href=http://disqus.com/ class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><div class="footer wrapper"><nav class=nav><div><a href=https://github.com/vividvilla/ezhil>Ezhil theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></nav></div><script>feather.replace()</script></body></html>
